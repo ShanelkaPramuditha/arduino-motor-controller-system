@@ -74,5 +74,5 @@ The code includes five pre-defined motor patterns:
 
 This code is provided under an MIT license. Refer to the LICENSE file for details.
 
-### Speacil
+### Special
 Documentation is not complete.
