@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	font-family: 'Roboto', sans-serif;
+}
+
+/* Theme */
+:root {
+	--color-text-light: #213547;
+	--color-background-light: #ffffff;
+	--color-text-dark: #e0e0e0;
+	--color-background-dark: #242424;
+	--color-hover: #747bff;
+}
+
+.light {
+	color: var(--color-text-light);
+	background-color: var(--color-background-light);
+}
+
+.dark {
+	color: var(--color-text-dark);
+	background-color: var(--color-background-dark);
+}
+
+.light a:hover,
+.dark a:hover {
+	color: var(--color-hover);
+}
