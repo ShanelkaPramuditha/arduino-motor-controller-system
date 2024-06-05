@@ -1,12 +1,12 @@
 ##  Remote Control Motor with Telegram and Web Interface
 
-This project allows you to control a DC motor remotely using a Telegram bot or a web interface (not included in this code). 
+This project allows you to control a DC motor remotely using a Telegram bot or a web interface. 
 
 ###  Features
 
-* Control motor direction and speed through Telegram commands.
+* Control motor speed through Telegram bot and web.
 * Set different motor speed patterns.
-* Monitor motor status through Telegram.
+* Monitor motor status.
 
 ###  Hardware Requirements
 
@@ -39,7 +39,7 @@ This project allows you to control a DC motor remotely using a Telegram bot or a
 
 1. Create a Telegram bot using the BotFather ([https://core.telegram.org/bots/tutorial](https://core.telegram.org/bots/tutorial)).
 2. Find the bot token from the bot creation process.
-3. Update the code with your bot token in the appropriate location (not provided in this example).
+3. Update the .env with your bot token in the appropriate location (not provided in this example).
 4. In Telegram, search for your bot and send commands to control the motor.
 
 **Telegram Commands:**
@@ -56,7 +56,7 @@ This project allows you to control a DC motor remotely using a Telegram bot or a
 3. Select your Arduino board and serial port from the IDE.
 4. Compile and upload the code to your Arduino board.
 
-###  Web Interface (Not Included)
+###  Web Interface
 
 This code provides the core functionality for motor control. To implement a web interface, you'll need a web server library like WiFi or Ethernet. The library will allow you to create a webpage for controlling the motor through a web browser.
 
