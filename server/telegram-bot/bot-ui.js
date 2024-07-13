@@ -13,15 +13,15 @@ function BotStart(bot) {
 						{ text: '⏬ Speed ⏬', callback_data: 'decrease_pwm' }
 					],
 					[
-						{ text: '♒︎ 1 ♒︎', callback_data: 'pattern1' },
-						{ text: '♒︎ 2 ♒︎', callback_data: 'pattern2' }
+						{ text: 'Pattern 1', callback_data: 'pattern1' },
+						{ text: 'Pattern 2', callback_data: 'pattern2' }
 					],
 					[
-						{ text: '♒︎ 3 ♒︎', callback_data: 'pattern3' },
-						{ text: '♒︎ 4 ♒︎', callback_data: 'pattern4' },
-						{ text: '♒︎ 5 ♒︎', callback_data: 'pattern5' }
+						{ text: 'Pattern 3', callback_data: 'pattern3' },
+						{ text: 'Pattern 4 ', callback_data: 'pattern4' }
 					],
-					[{ text: '📊 Status 📊', callback_data: 'fetch_status' }]
+					[{ text: 'Pattern 5', callback_data: 'pattern5' }]
+					// [{ text: '📊 Status 📊', callback_data: 'fetch_status' }]
 				]
 			}
 		};

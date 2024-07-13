@@ -3,12 +3,14 @@ import io from 'socket.io-client';
 import { powerStatus, setSpeedAPI, sendPatternAPI } from '../api/motorAPI';
 
 function Home() {
-	const [pwmValue, setPwmValue] = useState(50);
-	const [speed, setSpeed] = useState(50);
+	const [pwmValue, setPwmValue] = useState(0);
+	const [value, setValue] = useState(0);
+	const [miniValue, setMiniValue] = useState(0);
+	const [speed, setSpeed] = useState(0);
 	const [motorOn, setMotorOn] = useState(false);
 	const [motorStatus, setMotorStatus] = useState('OFF');
 	const [pattern, setPattern] = useState('No Pattern Running');
-	const [lastCommand, setLastCommand] = useState('OFF');
+	// const [lastCommand, setLastCommand] = useState('OFF');
 
 	const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -27,6 +29,7 @@ function Home() {
 	useEffect(() => {
 		const togglePower = async () => {
 			powerStatus(motorOn ? 'on' : 'off');
+			setPattern('No Pattern Running');
 		};
 
 		togglePower();
@@ -35,9 +38,9 @@ function Home() {
 	useEffect(() => {
 		const socket = io(BACKEND_URL);
 
-		socket.on('lastCommand', (command) => {
-			setLastCommand(command);
-		});
+		// socket.on('lastCommand', (command) => {
+		// 	setLastCommand(command);
+		// });
 		socket.on('status', (status) => {
 			if (status === 'ON') {
 				setMotorStatus('ON');
@@ -46,7 +49,7 @@ function Home() {
 			}
 		});
 		socket.on('speed', (speed) => {
-			setSpeed(speed);
+			setSpeed(speed.toFixed(0));
 		});
 		socket.on('pattern', (pattern) => {
 			setPattern(pattern);
@@ -62,27 +65,28 @@ function Home() {
 	};
 
 	const increasePWMValue = () => {
-		if (pwmValue < 255) {
-			if (pwmValue > 255) {
-				setPwmValue(255);
+		if (pwmValue < 100) {
+			if (pwmValue > 100) {
+				setPwmValue(100);
 			} else {
-				setPwmValue((prevValue) => prevValue + 5);
+				setPwmValue((prevValue) => prevValue + 1);
 			}
 		}
 	};
 
 	const decreasePWMValue = () => {
-		if (pwmValue > 50) {
-			if (pwmValue < 50) {
-				setPwmValue(50);
+		if (pwmValue > 0) {
+			if (pwmValue < 0) {
+				setPwmValue(0);
 			}
-			setPwmValue((prevValue) => prevValue - 5);
+			setPwmValue((prevValue) => prevValue - 1);
 		}
 	};
 
 	const handleSliderChange = (event) => {
 		const newPwm = parseInt(event.target.value, 10);
-		setPwmValue(newPwm);
+		setMiniValue(newPwm);
+		setPwmValue(value + miniValue);
 	};
 
 	return (
@@ -96,7 +100,7 @@ function Home() {
 					>
 						-
 					</button>
-					<span className='card px-4 py-2 bg-gray-200 rounded text-gray-700 font-bold'>Speed: {pwmValue}</span>
+					<span className='card px-4 py-2 bg-gray-200 rounded text-gray-700 font-bold'>Speed: {speed}%</span>
 					<button
 						onClick={increasePWMValue}
 						className='bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded'
@@ -105,72 +109,128 @@ function Home() {
 					</button>
 				</div>
 				<div className='flex flex-col mt-4 w-96 items-center'>
+					{/* Buttons for set speed (10, 20, 30, 40, 50, etc) */}
+					<div className='grid grid-cols-5 gap-4'>
+						{[10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map((value) => (
+							<button
+								key={value}
+								onClick={() => {
+									setPwmValue(value);
+									setValue(value);
+									setMiniValue(0);
+								}}
+								className='bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded'
+							>
+								{value}%
+							</button>
+						))}
+					</div>
+				</div>
+				<div className='flex flex-col mt-4 w-96 items-center'>
 					<input
 						type='range'
-						min='50'
-						max='255'
-						value={pwmValue}
+						min={0}
+						max={10}
+						value={miniValue}
 						onChange={handleSliderChange}
-						className='slider w-full'
+						className={`slider w-full ${speed == 100 ? 'opacity-50 cursor-not-allowed' : ''}`}
+						disabled={speed == 100}
 					/>
 				</div>
 				<div className='flex flex-col mt-4 w-96 items-center'>
 					<div className='w-full bg-gray-200 rounded-full dark:bg-gray-700'>
 						<div
 							className='bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full'
-							style={{ width: Math.floor((pwmValue / 255) * 100) + '%' }}
+							style={{ width: Math.floor(speed) + '%' }}
 						>
-							{Math.floor((pwmValue / 255) * 100)}% {/* Display the width percentage */}
+							{speed}% {/* Display the width percentage */}
 						</div>
 					</div>
 				</div>
 
-				<div className='flex mt-4 gap-4'>
-					<button
-						onClick={() => sendPattern('pattern1')}
-						className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-					>
-						Pattern 1
-					</button>
-					<button
-						onClick={() => sendPattern('pattern2')}
-						className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
-					>
-						Pattern 2
-					</button>
-					<button
-						onClick={() => sendPattern('pattern3')}
-						className='bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded'
-					>
-						Pattern 3
-					</button>
-					<button
-						onClick={() => sendPattern('pattern4')}
-						className='bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded'
-					>
-						Pattern 4
-					</button>
-					<button
-						onClick={() => sendPattern('pattern5')}
-						className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
-					>
-						Pattern 5
-					</button>
+				<div className='grid grid-cols-3 mt-4 gap-4'>
+					<div>
+						<button
+							onClick={() => sendPattern('pattern1')}
+							className={
+								pattern == 'PATTERN1'
+									? 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+									: 'font-bold py-2 px-4 rounded border border-blue-500'
+							}
+						>
+							Pattern 1
+						</button>
+					</div>
+					<div>
+						<button
+							onClick={() => sendPattern('pattern2')}
+							className={
+								pattern == 'PATTERN2'
+									? 'bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded'
+									: 'font-bold py-2 px-4 rounded border border-yellow-500'
+							}
+						>
+							Pattern 2
+						</button>
+					</div>
+					<div>
+						<button
+							onClick={() => sendPattern('pattern3')}
+							className={
+								pattern == 'PATTERN3'
+									? 'bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded'
+									: 'font-bold py-2 px-4 rounded border border-indigo-500'
+							}
+						>
+							Pattern 3
+						</button>
+					</div>
+					<div>
+						<button
+							onClick={() => sendPattern('pattern4')}
+							className={
+								pattern == 'PATTERN4'
+									? 'bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded'
+									: 'font-bold py-2 px-4 rounded border border-purple-500'
+							}
+						>
+							Pattern 4
+						</button>
+					</div>
+					<div>
+						<button
+							onClick={() => sendPattern('pattern5')}
+							className={
+								pattern == 'PATTERN5'
+									? 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
+									: 'font-bold py-2 px-4 rounded border border-red-500'
+							}
+						>
+							Pattern 5
+						</button>
+					</div>
+					<div>
+						<button
+							onClick={() => sendPattern('pattern6')}
+							className={
+								pattern == 'PATTERN6'
+									? 'bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+									: 'font-bold py-2 px-4 rounded border border-green-500'
+							}
+						>
+							Pattern 6
+						</button>
+					</div>
 				</div>
 				<br />
 				<div className='flex flex-col gap-2 w-full items-center'>
 					<button
 						onClick={() => togglePower('on')}
-						className={`text-white font-bold py-2 px-4 rounded w-80 ${
-							!motorOn ? 'bg-green-500 hover:bg-green-700' : 'bg-red-500 hover:bg-red-700'
-						}`}
+						className={`text-white font-bold py-2 px-4 rounded w-80 
+							${motorStatus === 'OFF' ? 'bg-green-500 hover:bg-green-700' : 'bg-red-500 hover:bg-red-700'}`}
 					>
 						Turn {motorStatus === 'OFF' ? 'On' : 'Off'} Motor
 					</button>
-					<p>Motor is currently {motorStatus}</p>
-					<p>Current Pattern: {pattern}</p>
-					<p>Current Speed: {speed}</p>
-					{/* <p>Last Command: {lastCommand}</p> */}
 				</div>
 			</header>
 		</div>

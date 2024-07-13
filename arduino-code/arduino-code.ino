@@ -1,32 +1,26 @@
-const int motorPin1 = 5;
-const int motorPin2 = 6;
-const int pwmPin = 9;  // PWM pin to control speed
+#include <MotorController.h>
 
-const int ledPin = 3;  // Pin for the LED
+DCMotorController motor1 = DCMotorController(14, 26, 27);
+const int ledPin = 2;
 
-int pwmValue = 50;     // Starting PWM value
-bool motorOn = false;  // Motor state
+int pwmValue = 50;
+bool motorOn = false;
 
 String lastCommand = "OFF";
 
 void setup() {
-  pinMode(motorPin1, OUTPUT);
-  pinMode(motorPin2, OUTPUT);
-  pinMode(pwmPin, OUTPUT);
-  pinMode(ledPin, OUTPUT);  // Initialize LED pin
-  Serial.begin(9600);       // Initialize serial communication at 9600 baud rate
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(115200);     // Initialize serial communication at 115200 baud rate
 }
 
 void loop() {
-  checkSerial();  // Always check for serial input
-
-  // Set the direction of the motor
+  checkSerial();
   if (motorOn) {
     noPattern();
   } else {
     offAll();
   }
-  delay(10);  // Add a small delay to control the speed of change
+  delay(10);
 }
 
 // Check serial for command
@@ -34,13 +28,10 @@ void checkSerial() {
   if (Serial.available()) {
     String command = Serial.readStringUntil('\n');
     lastCommand = command;
-    Serial.print("COMMAND:");
+    Serial.print(F("COMMAND:"));
     Serial.println(command);
     if (command.startsWith("PWM:")) {
-      int newValue = command.substring(4).toInt();
-      if (newValue >= 50 && newValue <= 255) {
-        pwmValue = newValue;
-      }
+      setPwmLimit(command);
     } else if (command == "ON") {
       motorOn = true;
     } else if (command == "OFF") {
@@ -56,24 +47,42 @@ void checkSerial() {
   }
 }
 
-// Run Pattern
+// Set PWM Limit
+void setPwmLimit(String command) {
+  int newValue = command.substring(4).toInt();
+  if (newValue >= 0 && newValue <= 255) {
+    pwmValue = newValue;
+  }
+}
+
 void runPattern(int pattern) {
   while (motorOn) {
     digitalWrite(ledPin, HIGH);
-    if (pattern == 1) {
-      pattern1();
-    } else if (pattern == 2) {
-      pattern2();
-    } else if (pattern == 3) {
-      pattern3();
-    } else if (pattern == 4) {
-      pattern4();
-    } else if (pattern == 5) {
-      pattern5();
+
+    switch (pattern) {
+      case 1:
+        pattern1();
+        break;
+      case 2:
+        pattern2();
+        break;
+      case 3:
+        pattern3();
+        break;
+      case 4:
+        pattern4();
+        break;
+      case 5:
+        pattern5();
+        break;
+      default:
+        Serial.println(F("Invalid pattern received!"));
     }
+
     checkSerial();
-    if (!motorOn)
+    if (!motorOn) {
       break;
+    }
   }
 }
 
@@ -82,19 +91,19 @@ void pattern1() {
   int lowSpeed = 50;
   int pulseDuration = 200;
 
-  analogWrite(pwmPin, pwmValue);
+  motor1.forward(pwmValue);
   delay(pulseDuration);
-  analogWrite(pwmPin, lowSpeed);
+  motor1.forward(lowSpeed);
   delay(pulseDuration);
 }
 
 void pattern2() {
   for (int i = 50; i <= pwmValue; i += 5) {
-    analogWrite(pwmPin, i);
+    motor1.forward(i);
     delay(50);
   }
   for (int i = pwmValue; i >= 50; i -= 5) {
-    analogWrite(pwmPin, i);
+    motor1.forward(i);
     delay(50);
   }
 }
@@ -102,9 +111,9 @@ void pattern2() {
 void pattern3() {
   int burstDuration = 100;
 
-  analogWrite(pwmPin, pwmValue);
+  motor1.forward(pwmValue);
   delay(burstDuration);
-  analogWrite(pwmPin, 0);
+  motor1.brake();
   delay(burstDuration);
 }
 
@@ -112,9 +121,9 @@ void pattern4() {
   int speed = random(50, pwmValue + 1);
   int duration = random(100, 500);
 
-  analogWrite(pwmPin, speed);
+  motor1.forward(speed);
   delay(duration);
-  analogWrite(pwmPin, 0);
+  motor1.brake();
   delay(duration);
 }
 
@@ -122,9 +131,9 @@ void pattern5() {
   int lowSpeed = 50;
   int step = 10;
   for (int peakSpeed = 50; peakSpeed <= pwmValue; peakSpeed += step) {
-    analogWrite(pwmPin, peakSpeed);
+    motor1.forward(peakSpeed);
     delay(200);
-    analogWrite(pwmPin, lowSpeed);
+    motor1.forward(lowSpeed);
     delay(200);
     checkSerial();
     if (!motorOn)
@@ -132,16 +141,14 @@ void pattern5() {
   }
 }
 
-// No Pattern # Default Mode
+// No Pattern
 void noPattern() {
-  digitalWrite(motorPin1, HIGH);
-  digitalWrite(motorPin2, LOW);
-  analogWrite(pwmPin, pwmValue);  // Write the PWM value to the motor
-  digitalWrite(ledPin, HIGH);     // Turn on the LED
+  motor1.forward(pwmValue);
+  digitalWrite(ledPin, HIGH);  // Turn on the LED
 }
 
 // Off all
 void offAll() {
-  analogWrite(pwmPin, 0);     // Turn off the motor
+  motor1.brake();
   digitalWrite(ledPin, LOW);  // Turn off the LED
 }
