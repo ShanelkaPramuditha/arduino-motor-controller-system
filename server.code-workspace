@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "server"
+		},
+		{
+			"path": "client"
+		},
+		{
+			"path": "android-client"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}

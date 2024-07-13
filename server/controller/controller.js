@@ -2,18 +2,14 @@ const { SerialPort, ReadlineParser } = require('serialport');
 require('dotenv').config();
 const { getIO } = require('../socket'); // Import the getIO function
 
-// Initialize Arduino port with default values (can be customized)
-const defaultPort = 'COM3';
-const defaultBaudRate = 9600;
-
 // Function to handle errors during serial port initialization
 function handlePortError(err) {
 	console.error('Error opening serial port:', err.message);
 }
 
 const arduinoPort = new SerialPort({
-	path: process.env.SERIAL_PORT || defaultPort,
-	baudRate: parseInt(process.env.SERIAL_BAUDRATE, 10) || defaultBaudRate
+	path: process.env.SERIAL_PORT,
+	baudRate: parseInt(process.env.SERIAL_BAUDRATE, 10)
 })
 	.on('open', () => {
 		console.log(`Serial port opened with baudrate ${arduinoPort.baudRate}`);
@@ -36,9 +32,10 @@ parser.on('data', (data) => {
 		if (lastCommand === 'ON' || lastCommand === 'OFF') {
 			getIO().emit('status', lastCommand);
 		} else if (lastCommand.startsWith('PWM:')) {
-			getIO().emit('speed', parseInt(lastCommand.substring(4), 10));
+			getIO().emit('speed', ((parseInt(lastCommand.substring(4), 10) - 50) / 205) * 100);
 		} else if (lastCommand.startsWith('PATTERN')) {
 			getIO().emit('pattern', lastCommand);
+			getIO().emit('status', 'ON');
 		} else {
 			console.warn(`Unknown command received from Arduino: ${lastCommand}`);
 		}
@@ -53,17 +50,24 @@ parser.on('data', (data) => {
 function getLastCommand(req, res) {
 	res.send(lastCommand);
 }
+// Function to calculate the speed based on the PWM value
+function calculateSpeed(pwmPercentage) {
+	return Math.round((pwmPercentage / 100) * 205 + 50);
+}
 
 function setSpeed(req, res) {
 	const { pwmValue } = req.body;
-	if (pwmValue >= 50 && pwmValue <= 255) {
+	console.log(`Received PWM value: ${pwmValue}`);
+	const calculatedSpeed = calculateSpeed(pwmValue);
+	console.log(`Setting PWM value to ${calculatedSpeed}`);
+	if (calculatedSpeed >= 50 && calculatedSpeed <= 255) {
 		try {
-			arduinoPort.write(`PWM:${pwmValue}\n`, (err) => {
+			arduinoPort.write(`PWM:${calculatedSpeed}\n`, (err) => {
 				if (err) {
 					console.error('Error writing PWM value to Arduino:', err.message);
 					return res.status(500).send('Error writing to Arduino');
 				}
-				res.send(`PWM Value set to ${pwmValue}`);
+				res.send(`PWM Value set to ${calculatedSpeed}`);
 			});
 		} catch (error) {
 			console.error('Error writing PWM value to Arduino:', error.message);
