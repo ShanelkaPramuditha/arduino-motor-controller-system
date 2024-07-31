@@ -10,7 +10,6 @@ function Home() {
 	const [motorOn, setMotorOn] = useState(false);
 	const [motorStatus, setMotorStatus] = useState('OFF');
 	const [pattern, setPattern] = useState('No Pattern Running');
-	// const [lastCommand, setLastCommand] = useState('OFF');
 
 	const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -38,9 +37,6 @@ function Home() {
 	useEffect(() => {
 		const socket = io(BACKEND_URL);
 
-		// socket.on('lastCommand', (command) => {
-		// 	setLastCommand(command);
-		// });
 		socket.on('status', (status) => {
 			if (status === 'ON') {
 				setMotorStatus('ON');
@@ -211,11 +207,12 @@ function Home() {
 					</div>
 					<div>
 						<button
+							disabled
 							onClick={() => sendPattern('pattern6')}
 							className={
 								pattern == 'PATTERN6'
 									? 'bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
-									: 'font-bold py-2 px-4 rounded border border-green-500'
+									: 'font-bold py-2 px-4 rounded border border-green-500 disabled:opacity-20'
 							}
 						>
 							Pattern 6
