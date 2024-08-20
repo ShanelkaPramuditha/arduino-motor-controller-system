@@ -8,14 +8,14 @@ const TELEGRAM_TOKEN = process.env.TG_BOT_TOKEN;
 const bot = new Telegraf(TELEGRAM_TOKEN);
 
 function setupBot() {
-	// Bot Start function
-	BotStart(bot);
+  // Bot Start function
+  BotStart(bot);
 
-	// Bot Commands function
-	BotCommands(bot);
+  // Bot Commands function
+  BotCommands(bot);
 
-	// Launch the bot
-	bot.launch();
+  // Launch the bot
+  bot.launch();
 }
 
 module.exports = { setupBot };
