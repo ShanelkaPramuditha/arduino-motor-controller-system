@@ -5,12 +5,22 @@ function BotStart(bot) {
 			reply_markup: {
 				inline_keyboard: [
 					[
-						{ text: '🟢 On 🟢', callback_data: 'power_on' },
-						{ text: '🔴 Off 🔴', callback_data: 'power_off' }
+						{ text: '10%', callback_data: 'PWM:10' },
+						{ text: '20%', callback_data: 'PWM:20' },
+						{ text: '30%', callback_data: 'PWM:30' },
+						{ text: '40%', callback_data: 'PWM:40' },
+						{ text: '50%', callback_data: 'PWM:50' }
 					],
 					[
-						{ text: '⏫ Speed ⏫', callback_data: 'increase_pwm' },
-						{ text: '⏬ Speed ⏬', callback_data: 'decrease_pwm' }
+						{ text: '60%', callback_data: 'PWM:60' },
+						{ text: '70%', callback_data: 'PWM:70' },
+						{ text: '80%', callback_data: 'PWM:80' },
+						{ text: '90%', callback_data: 'PWM:90' },
+						{ text: '100%', callback_data: 'PWM:100' }
+					],
+					[
+						{ text: '🟢 On 🟢', callback_data: 'power_on' },
+						{ text: '🔴 Off 🔴', callback_data: 'power_off' }
 					],
 					[
 						{ text: 'Pattern 1', callback_data: 'pattern1' },
@@ -21,7 +31,6 @@ function BotStart(bot) {
 						{ text: 'Pattern 4 ', callback_data: 'pattern4' }
 					],
 					[{ text: 'Pattern 5', callback_data: 'pattern5' }]
-					// [{ text: '📊 Status 📊', callback_data: 'fetch_status' }]
 				]
 			}
 		};

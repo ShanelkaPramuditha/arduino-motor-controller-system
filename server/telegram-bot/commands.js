@@ -29,10 +29,12 @@ function BotCommands(bot) {
 		);
 	});
 
-	bot.action('increase_pwm', async (ctx) => {
+	// Change speed with integer values
+	bot.action(/PWM:\d+/, async (ctx) => {
 		const chatId = ctx.chat.id;
+		const pwmValue = parseInt(ctx.match[0].split(':')[1]);
 		await setSpeed(
-			{ body: { pwmValue: 255 } },
+			{ body: { pwmValue } },
 			{
 				send: async (message) => await ctx.reply(message),
 				status: (code) => {
@@ -64,19 +66,6 @@ function BotCommands(bot) {
 			// Provide a user-friendly error message to the chat
 			await ctx.reply('An unexpected error occurred. Please try again later.');
 		}
-	});
-
-	bot.action('fetch_status', async (ctx) => {
-		const chatId = ctx.chat.id;
-		await fetchStatus(
-			{ body: {} },
-			{
-				send: async (message) => await ctx.reply(message),
-				status: (code) => {
-					return { send: async (message) => await ctx.reply(message) };
-				}
-			}
-		);
 	});
 }
 
