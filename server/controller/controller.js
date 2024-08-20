@@ -67,7 +67,7 @@ function setSpeed(req, res) {
 					console.error('Error writing PWM value to Arduino:', err.message);
 					return res.status(500).send('Error writing to Arduino');
 				}
-				res.send(`PWM Value set to ${calculatedSpeed}`);
+				res.send(`PWM Value set to ${calculatedSpeed} = ${pwmValue}%`);
 			});
 		} catch (error) {
 			console.error('Error writing PWM value to Arduino:', error.message);
