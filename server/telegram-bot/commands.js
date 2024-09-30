@@ -1,4 +1,4 @@
-const { setSpeed, power, pattern } = require('../controller/controller');
+import { setSpeed, power, setPattern } from '../controller/controller.js';
 
 function BotCommands(bot) {
   bot.action('power_on', async (ctx) => {
@@ -53,7 +53,7 @@ function BotCommands(bot) {
     const chatId = ctx.chat.id;
     try {
       // Call the pattern function with appropriate error handling
-      await pattern(
+      await setPattern(
         { body: { pattern: ctx.match[0] } },
         {
           send: async (message) => await ctx.reply(message),
@@ -71,4 +71,4 @@ function BotCommands(bot) {
   });
 }
 
-module.exports = { BotCommands };
+export { BotCommands };

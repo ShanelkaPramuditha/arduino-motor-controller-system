@@ -1,7 +1,9 @@
-const { Telegraf } = require('telegraf');
-require('dotenv').config();
-const { BotStart } = require('./bot-ui');
-const { BotCommands } = require('./commands');
+import { Telegraf } from 'telegraf';
+import dotenv from 'dotenv';
+import { BotStart } from './bot-ui.js';
+import { BotCommands } from './commands.js';
+
+dotenv.config();
 
 // Token from env file
 const TELEGRAM_TOKEN = process.env.TG_BOT_TOKEN;
@@ -18,4 +20,4 @@ function setupBot() {
   bot.launch();
 }
 
-module.exports = { setupBot };
+export { setupBot };

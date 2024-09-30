@@ -1,9 +1,9 @@
-const { setSpeed, power, pattern } = require('../controller/controller');
+import { setSpeed, power, setPattern } from '../controller/controller.js';
 
 function setupRoutes(app) {
   app.post('/set-speed', setSpeed);
   app.post('/power', power);
-  app.post('/pattern', pattern);
+  app.post('/pattern', setPattern);
 }
 
-module.exports = { setupRoutes };
+export { setupRoutes };
