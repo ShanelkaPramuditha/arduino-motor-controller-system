@@ -3,7 +3,7 @@ import { lazy, Suspense } from 'react';
 import Loader from '../components/Loader';
 
 const Dashboard = lazy(() => import('../pages/dashboard'));
-const Home = lazy(() => import('../pages/motor'));
+const MotorController = lazy(() => import('../pages/motor-control'));
 
 const NotFound = lazy(() => import('../pages/not-found'));
 
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
 				path: '/motor',
 				element: (
 					<Suspense fallback={<Loader />}>
-						<Home />
+						<MotorController />
 					</Suspense>
 				)
 			}
