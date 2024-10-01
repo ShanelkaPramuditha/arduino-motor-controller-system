@@ -15,10 +15,11 @@ const power = async (req, res) => {
   }
 };
 
-function setSpeed(req, res) {
+function setMaxSpeed(req, res) {
   const { pwmValue } = req.body;
+  console.log(`Setting PWM value to ${pwmValue}%`);
   try {
-    webserverService.setSpeed(pwmValue);
+    webserverService.setMaxSpeed(pwmValue);
     res.send(`PWM Value set to ${pwmValue}%`);
   } catch (error) {
     console.error('Error setting PWM value:', error.message);
@@ -37,4 +38,4 @@ function setPattern(req, res) {
   }
 }
 
-export { setSpeed, power, setPattern };
+export { setMaxSpeed, power, setPattern };

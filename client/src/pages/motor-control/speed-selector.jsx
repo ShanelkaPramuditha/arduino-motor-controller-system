@@ -1,23 +1,60 @@
 import PropTypes from 'prop-types';
 import { setSpeedAPI } from '../../api/motorAPI';
 import useMotorStore from '../../store/motor-store';
+import { useEffect, useState } from 'react';
+import { Line } from 'react-chartjs-2';
+import { Chart, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
+
+// Register chart.js components
+Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
 
 const SpeedSelector = ({ motorStatus }) => {
 	const { maxSpeed, currentSpeed, setMaxSpeed } = useMotorStore();
+	const [speedData, setSpeedData] = useState([]); // Track the speed data for the chart
+
+	// Update the chart data when currentSpeed changes
+	useEffect(() => {
+		setSpeedData((prevData) => [
+			...prevData.slice(-9), // Keep only the last 10 values to avoid overcrowding
+			currentSpeed
+		]);
+	}, [currentSpeed]);
+
+	const chartData = {
+		labels: Array.from({ length: speedData.length }, (_, i) => i + 1), // Labels for the X-axis
+		datasets: [
+			{
+				label: 'Motor Speed (%)',
+				data: speedData,
+				fill: false,
+				borderColor: 'rgba(75, 192, 192, 1)',
+				tension: 0.1
+			}
+		]
+	};
 
 	return (
 		<>
-			<div className='flex items-center gap-4'>
+			<div className='flex flex-col items-center gap-4'>
+				{/* Chart for currentSpeed */}
+				<div className='w-96 mt-6'>
+					<Line data={chartData} />
+				</div>
+
+				{/* Current Speed Card */}
 				<span className='card px-4 py-2 bg-gray-200 rounded text-gray-700 font-bold w-52 text-center'>
 					Current Speed: {currentSpeed}%
 				</span>
 
-				<span className='card px-4 py-2 bg-gray-200 rounded text-gray-700 font-bold w-52 text-center'>
-					Max Speed: {maxSpeed}%
-				</span>
+				<div className='flex gap-4'>
+					<span className='card px-4 py-2 bg-gray-200 rounded text-gray-700 font-bold w-52 text-center'>
+						Max Speed: {maxSpeed}%
+					</span>
+				</div>
 			</div>
+
 			<div className='flex flex-col mt-4 w-96 items-center'>
-				{/* Buttons for set speed (10, 20, 30, 40, 50, etc) */}
+				{/* Buttons for setting speed (10, 20, 30, 40, 50, etc) */}
 				<div className='grid grid-cols-5 gap-4'>
 					{[10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map((value) => (
 						<button

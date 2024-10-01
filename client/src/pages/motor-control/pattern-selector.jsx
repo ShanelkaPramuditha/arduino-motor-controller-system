@@ -11,100 +11,44 @@ const PatternSelector = ({ motorStatus }) => {
 
 	return (
 		<>
-			<div>
-				<button
-					disabled={motorStatus === 'OFF'}
-					onClick={() => sendPattern(0)}
-					className={
-						pattern == 'DEFAULT' && motorStatus === 'ON'
-							? 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-							: 'font-bold py-2 px-4 rounded border border-blue-500 disabled:opacity-20'
-					}
-				>
-					Default
-				</button>
-			</div>
-
-			<div>
-				<button
-					disabled={motorStatus === 'OFF'}
-					onClick={() => sendPattern(1)}
-					className={
-						pattern == 'PATTERN1'
-							? 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-							: 'font-bold py-2 px-4 rounded border border-blue-500 disabled:opacity-20'
-					}
-				>
-					Pattern 1
-				</button>
-			</div>
-			<div>
-				<button
-					disabled={motorStatus === 'OFF'}
-					onClick={() => sendPattern(2)}
-					className={
-						pattern == 'PATTERN2'
-							? 'bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded'
-							: 'font-bold py-2 px-4 rounded border border-yellow-500 disabled:opacity-20'
-					}
-				>
-					Pattern 2
-				</button>
-			</div>
-			<div>
-				<button
-					disabled={motorStatus === 'OFF'}
-					onClick={() => sendPattern(3)}
-					className={
-						pattern == 'PATTERN3'
-							? 'bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded'
-							: 'font-bold py-2 px-4 rounded border border-indigo-500 disabled:opacity-20'
-					}
-				>
-					Pattern 3
-				</button>
-			</div>
-			<div>
-				<button
-					disabled={motorStatus === 'OFF'}
-					onClick={() => sendPattern(4)}
-					className={
-						pattern == 'PATTERN4'
-							? 'bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded'
-							: 'font-bold py-2 px-4 rounded border border-purple-500 disabled:opacity-20'
-					}
-				>
-					Pattern 4
-				</button>
-			</div>
-			<div>
-				<button
-					disabled={motorStatus === 'OFF'}
-					onClick={() => sendPattern(5)}
-					className={
-						pattern == 'PATTERN5'
-							? 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
-							: 'font-bold py-2 px-4 rounded border border-red-500 disabled:opacity-20'
-					}
-				>
-					Pattern 5
-				</button>
-			</div>
-			<div>
-				<button
-					disabled={motorStatus === 'OFF'}
-					onClick={() => sendPattern(6)}
-					className={
-						pattern == 'PATTERN6'
-							? 'bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
-							: 'font-bold py-2 px-4 rounded border border-green-500 disabled:opacity-20'
-					}
-				>
-					Pattern 6
-				</button>
+			<div className='grid grid-cols-1 md:grid-cols-5 xl:grid-cols-5 gap-4'>
+				{[...Array(11).keys()].map((i) => (
+					<div key={i}>
+						<button
+							disabled={motorStatus === 'OFF' || pattern === `PATTERN${i}`}
+							onClick={() => sendPattern(i)}
+							className={`font-bold py-2 px-4 rounded w-full 
+								${
+									pattern === `PATTERN${i}` && motorStatus === 'ON'
+										? `bg-${getButtonColor(i)}-500 hover:bg-${getButtonColor(i)}-700 text-white`
+										: `border border-${getButtonColor(i)}-500 disabled:opacity-20`
+								}`}
+						>
+							Pattern {i === 0 ? 'On' : i}
+						</button>
+					</div>
+				))}
 			</div>
 		</>
 	);
+};
+
+// Helper function to get button colors based on index
+const getButtonColor = (index) => {
+	const colors = [
+		'green', // Pattern 0
+		'blue', // Pattern 1
+		'yellow', // Pattern 2
+		'indigo', // Pattern 3
+		'purple', // Pattern 4
+		'red', // Pattern 5
+		'green', // Pattern 6
+		'blue', // Pattern 7
+		'yellow', // Pattern 8
+		'indigo', // Pattern 9
+		'purple' // Pattern 10
+	];
+	return colors[index] || 'gray';
 };
 
 export default PatternSelector;

@@ -1,4 +1,4 @@
-import { setSpeed, power, setPattern } from '../controller/controller.js';
+import { setMaxSpeed, power, setPattern } from '../controller/controller.js';
 
 function BotCommands(bot) {
   bot.action('power_on', async (ctx) => {
@@ -32,7 +32,7 @@ function BotCommands(bot) {
     const chatId = ctx.chat.id;
     const pwmValue = parseInt(ctx.match[0].split(':')[1]);
     try {
-      await setSpeed(
+      await setMaxSpeed(
         { body: { pwmValue } },
         {
           send: async (message) => await ctx.reply(message),
