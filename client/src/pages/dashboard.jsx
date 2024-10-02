@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 function Dashboard() {
 	return (
-		<div className='min-h-[calc(100vh-60px)] bg-gray-100 dark:bg-gray-900 flex items-center justify-center transition duration-300'>
+		<div className='min-h-[calc(100vh-80px)] bg-gray-100 dark:bg-gray-900 flex items-center justify-center transition duration-300'>
 			<header className='bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 md:p-12 flex flex-col items-center justify-center max-w-lg w-full transition-colors duration-300'>
 				<h1 className='text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-6 text-center transition-colors duration-300'>
 					Welcome to the Dashboard

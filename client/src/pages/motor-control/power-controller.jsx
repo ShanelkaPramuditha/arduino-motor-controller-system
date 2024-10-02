@@ -21,11 +21,11 @@ const PowerController = ({ motorStatus }) => {
 		<>
 			<div className='flex flex-col gap-2 w-full items-center'>
 				<button
-					onClick={() => togglePower(motorStatus === 'ON' ? POWER_STATUS.OFF : POWER_STATUS.ON)}
-					className={`text-white font-bold py-2 px-4 rounded w-80 
-							${motorStatus === 'OFF' ? 'bg-green-500 hover:bg-green-700' : 'bg-red-500 hover:bg-red-700'}`}
+					onClick={() => togglePower(motorStatus === POWER_STATUS.ON ? POWER_STATUS.OFF : POWER_STATUS.ON)}
+					className={`text-white font-bold py-2 px-4 rounded w-44
+							${motorStatus === POWER_STATUS.OFF ? 'bg-green-500 hover:bg-green-700' : 'bg-red-500 hover:bg-red-700'}`}
 				>
-					Turn {motorStatus === 'OFF' ? POWER_STATUS.ON : POWER_STATUS.OFF} Motor
+					Turn {motorStatus === POWER_STATUS.OFF ? POWER_STATUS.ON : POWER_STATUS.OFF} Motor
 				</button>
 			</div>
 		</>

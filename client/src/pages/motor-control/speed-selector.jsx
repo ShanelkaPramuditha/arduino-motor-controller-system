@@ -35,16 +35,19 @@ const SpeedSelector = ({ motorStatus }) => {
 		<>
 			<div className='flex flex-col items-center gap-4'>
 				{/* Chart for currentSpeed */}
-				<div className='w-full sm:w-96 mt-6'>
+				{/* Hide with tailwind css */}
+				<div className='w-full sm:w-96 mt-6 hidden'>
 					<Line data={chartData} />
 				</div>
 
 				{/* Current Speed Card */}
 				<span className='card px-4 py-2 bg-gray-200 rounded text-gray-700 font-bold w-full sm:w-52 text-center'>
-					Current Speed: {currentSpeed}%
+					{/* Round number */}
+					Current Speed: {Math.round(currentSpeed)}%
 				</span>
 
-				<div className='flex gap-4 flex-wrap justify-center'>
+				{/* <div className='flex gap-4 flex-wrap justify-center'> */}
+				<div className='hidden'>
 					<span className='card px-4 py-2 bg-gray-200 rounded text-gray-700 font-bold w-full sm:w-52 text-center'>
 						Max Speed: {maxSpeed}%
 					</span>
