@@ -25,7 +25,6 @@ const webserverService = {
           getIO().emit('pattern', null);
         } else {
           motorOn = true;
-          console.log(minSpeed);
           webserverService.setSpeed(minSpeed);
           webserverService.setPattern(0);
         }
@@ -54,7 +53,7 @@ const webserverService = {
       const response = await fetch(url);
       if (response.ok) {
         getIO().emit('speed', speedPercentage);
-        console.log(`Speed set to ${speedPercentage}% (PWM: ${calculatedSpeed})`);
+        // console.log(`Speed set to ${speedPercentage}% (PWM: ${calculatedSpeed})`);
       } else {
         console.error(`Error setting speed ${speedPercentage}%`);
       }
@@ -64,7 +63,10 @@ const webserverService = {
   },
 
   setPattern: async (pattern) => {
-    minSpeed = 10;
+    if (pattern === currentPattern) {
+      return;
+    }
+
     currentPattern = pattern;
 
     // Start the new pattern
@@ -73,7 +75,9 @@ const webserverService = {
 
     if (pattern === 0) {
       getIO().emit('pattern', `PATTERN${currentPattern}`);
-      await webserverService.pattern0(maxSpeed);
+      while (motorOn && currentPattern === 0) {
+        await webserverService.pattern0(maxSpeed);
+      }
     }
 
     if (pattern === 1) {
@@ -152,7 +156,7 @@ const webserverService = {
     await webserverService.setSpeed(speed);
   },
 
-  // Blink pattern
+  // Pattern 1: Blink
   pattern1: async (speed) => {
     await webserverService.setSpeed(0); // Motor off
     await delay(100); // Wait for 100ms
@@ -160,7 +164,7 @@ const webserverService = {
     await delay(200); // Wait for 200ms
   },
 
-  // Slowly increase and decrease speed pattern
+  // Pattern 2: Increase and decrease speed
   pattern2: async (speed) => {
     // Increase speed
     for (let i = 0; i <= speed; i += 1) {
@@ -175,6 +179,7 @@ const webserverService = {
     }
   },
 
+  // Pattern 3: Fast increase and decrease
   pattern3: async (speed) => {
     for (let i = speed; i >= 0; i -= 10) {
       await webserverService.setSpeed(i);
@@ -186,7 +191,7 @@ const webserverService = {
     }
   },
 
-  // Wave pattern
+  // Pattern 4: Wave
   pattern4: async (speed) => {
     const lowSpeed = Math.floor(speed * 0.3); // 30% of max speed as the low value
     const highSpeed = Math.floor(speed * 0.9); // 90% of max speed as the high value
@@ -202,7 +207,7 @@ const webserverService = {
     await delay(200); // Pause briefly at low speed before the next wave
   },
 
-  // Pulse and Hold
+  // Pattern 5: Pulse and Hold
   pattern5: async (speed) => {
     const pulseDuration = 100; // Duration for each pulse
     const holdDuration = 2000; // Hold at max speed for 2 seconds
@@ -284,7 +289,7 @@ const webserverService = {
   }
 };
 
-// Helper function to create a delay
+// function to create a delay
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
