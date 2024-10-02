@@ -167,15 +167,15 @@ const webserverService = {
   // Pattern 2: Increase and decrease speed
   pattern2: async (speed) => {
     // Increase speed
-    for (let i = 0; i <= speed; i += 1) {
+    for (let i = 0; i <= speed; i += 5) {
       await webserverService.setSpeed(i);
-      await delay(10); // Delay between speed increases
+      await delay(100); // Delay between speed increases
     }
 
     // Decrease speed
     for (let i = speed; i >= 0; i -= 5) {
       await webserverService.setSpeed(i);
-      await delay(10); // Delay between speed decreases
+      await delay(100); // Delay between speed decreases
     }
   },
 
