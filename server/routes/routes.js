@@ -1,9 +1,9 @@
-import { setMaxSpeed, power, setPattern } from '../controller/controller.js';
+import { setSpeed, power, pattern } from '../controller/motor.controller.js';
 
 function setupRoutes(app) {
-  app.post('/set-speed', setMaxSpeed);
+  app.post('/set-speed', setSpeed);
   app.post('/power', power);
-  app.post('/pattern', setPattern);
+  app.post('/pattern', pattern);
 }
 
 export { setupRoutes };

@@ -1,4 +1,4 @@
-import { setMaxSpeed, power, setPattern } from '../controller/controller.js';
+import { setSpeed, power, pattern } from '../controller/motor.controller.js';
 
 function BotCommands(bot) {
   bot.action('power_on', async (ctx) => {
@@ -32,7 +32,7 @@ function BotCommands(bot) {
     const chatId = ctx.chat.id;
     const pwmValue = parseInt(ctx.match[0].split(':')[1]);
     try {
-      await setMaxSpeed(
+      await setSpeed(
         { body: { pwmValue } },
         {
           send: async (message) => await ctx.reply(message),
@@ -53,7 +53,7 @@ function BotCommands(bot) {
     const chatId = ctx.chat.id;
     try {
       // Call the pattern function with appropriate error handling
-      await setPattern(
+      await pattern(
         { body: { pattern: ctx.match[0] } },
         {
           send: async (message) => await ctx.reply(message),
