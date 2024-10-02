@@ -9,7 +9,12 @@ import { SERVER_CONFIG } from './constants/constants.js';
 const app = express();
 const port = SERVER_CONFIG.PORT;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST']
+  })
+);
 app.use(bodyParser.json());
 
 // Setup routes
