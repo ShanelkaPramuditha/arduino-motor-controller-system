@@ -24,6 +24,7 @@
     "@types/body-parser": "^1.19.5",
     "nodemon": "^3.1.2"
   },
-  "author": "Your Name",
-  "license": "ISC"
+  "author": "YShanelka Pramuditha",
+  "license": "ISC",
+  "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228"
 }
