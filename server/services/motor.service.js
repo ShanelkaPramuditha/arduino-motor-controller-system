@@ -19,7 +19,7 @@ async function setMotorSpeed(pwmValue) {
   if (calculatedSpeed >= 50 && calculatedSpeed <= 255) {
     try {
       await writeToSerial(`PWM:${calculatedSpeed}`);
-      return `✅ PWM speed successfully set to ${calculatedSpeed} 🏎️`;
+      return `✅ PWM speed successfully set to ${pwmValue}% 🏎️`;
     } catch (err) {
       throw new Error(`❌ Failed to set motor speed: ${err.message} ⚠️`);
     }

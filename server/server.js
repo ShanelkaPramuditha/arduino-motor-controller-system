@@ -9,7 +9,14 @@ import { SERVER_CONFIG } from './constants/constants.js';
 const app = express();
 const port = SERVER_CONFIG.PORT;
 
-app.use(cors());
+// Allow any origin for CORS
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  })
+);
 app.use(bodyParser.json());
 
 // Setup routes
